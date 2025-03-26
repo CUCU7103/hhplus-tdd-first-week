@@ -8,10 +8,14 @@ import java.util.List;
 
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.ValueSource;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
+import io.hhplus.tdd.CustomErrorCode;
+import io.hhplus.tdd.CustomException;
 import io.hhplus.tdd.database.PointHistoryTable;
 import io.hhplus.tdd.database.UserPointTable;
 
@@ -24,16 +28,8 @@ class PointServiceUnitTest {
 	@Mock
 	private UserPointTable userPointTable;
 
-	@Mock
-	private ValidatorImpl validator;
-
 	@InjectMocks
 	private PointService pointService;
-
-	/**
-	 *  포인트 조회에 관련한 기능은 단순한 DB 조회 로직이지만
-	 *  검증 객체를 사용하였으므로 이에 대한 성공 케이스 테스트 코드를 작성하였습니다.
-	 */
 
 	@Test
 	void 포인트_조회시_유저_아이디가_양수라면_정상적으로_조회된다() {
@@ -41,7 +37,6 @@ class PointServiceUnitTest {
 		long id = 1L;
 		long point = 100L;
 		UserPoint userPoint = new UserPoint(id, point, System.currentTimeMillis());
-		doNothing().when(validator).invalidId(id);
 		given(userPointTable.selectById(id)).willReturn(userPoint); // stubbing 객체의 상태를 반환
 		// act 테스트 실행
 		UserPoint result = pointService.searchUserPoint(id);
@@ -51,29 +46,54 @@ class PointServiceUnitTest {
 		assertThat(userPoint.point()).isEqualTo(point);
 	}
 
+	@ValueSource(longs = {0L, -100L})
+	@ParameterizedTest
+	void 포인트_조회시_유저_아이디가_0이거나_0보다_작다면_예외가_발생한다(long id) {
+		// assert
+		assertThatThrownBy(() -> pointService.searchUserPoint(id))
+			.isInstanceOf(CustomException.class);
+	}
+
 	@Test
 	void 포인트_충전_이용내역_조회시_유저_아이디가_양수라면_정상적으로_조회된다() {
 		//arrange
-		long id = 1L;
-		long firstAmount = 100L;
-		long secondAmount = 100L;
-		PointHistory firstHistory = new PointHistory(1, id, firstAmount, TransactionType.CHARGE,
+		long userId = 1L;
+		PointHistory firstHistory = new PointHistory(1, userId, 100L, TransactionType.CHARGE,
 			System.currentTimeMillis());
-		PointHistory secondHistory = new PointHistory(2, id, secondAmount, TransactionType.CHARGE,
+		PointHistory secondHistory = new PointHistory(2, userId, 200L, TransactionType.CHARGE,
 			System.currentTimeMillis());
-		doNothing().when(validator).invalidId(id);
 		List<PointHistory> histories = Arrays.asList(firstHistory, secondHistory);
-		given(pointHistoryTable.selectAllByUserId(id)).willReturn(histories);
+		given(pointHistoryTable.selectAllByUserId(userId)).willReturn(histories);
 
-		// act
-		List<PointHistory> resultList = pointService.searchPointHistory(id);
-
+		// act 테스트 실행
+		List<PointHistory> results = pointService.searchPointHistory(userId);
 		// assert 검증
-		assertThat(resultList).hasSize(2);
-		assertThat(resultList.get(0).userId()).isEqualTo(id);
-		assertThat(resultList.get(1).userId()).isEqualTo(id);
-		assertThat(resultList.get(0).amount()).isEqualTo(firstAmount);
-		assertThat(resultList.get(1).amount()).isEqualTo(secondAmount);
+		assertThat(results).isEqualTo(histories);
+		assertThat(results.size()).isEqualTo(2);
 	}
 
+	@ValueSource(longs = {0L, -100L})
+	@ParameterizedTest
+	void 포인트_충전_이용내역_조회시_유저_아이디가_0이거나_0보다_작다면_예외가_발생한다(long id) {
+		// act & assert
+		assertThatThrownBy(() -> pointService.searchPointHistory(id))
+			.isInstanceOf(CustomException.class)
+			.hasMessageContaining(CustomErrorCode.INVALID_ID.getMessage());
+	}
+
+	@Test
+	void 포인트_충전_이용내역_조회시_유저의_포인트가_0보다_작은_기록이_있다면_예외가_발생한다() {
+		long userId = 1L;
+		PointHistory firstHistory = new PointHistory(1, userId, 100L, TransactionType.CHARGE,
+			System.currentTimeMillis());
+		PointHistory secondHistory = new PointHistory(2, userId, -200L, TransactionType.CHARGE,
+			System.currentTimeMillis());
+		List<PointHistory> histories = Arrays.asList(firstHistory, secondHistory);
+		given(pointHistoryTable.selectAllByUserId(userId)).willReturn(histories);
+
+		// act & assert 검증
+		assertThatThrownBy(() -> pointService.searchPointHistory(userId))
+			.isInstanceOf(CustomException.class)
+			.hasMessageContaining(CustomErrorCode.INVALID_POINT.getMessage());
+	}
 }
