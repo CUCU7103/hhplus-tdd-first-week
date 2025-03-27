@@ -11,6 +11,12 @@ import io.hhplus.tdd.CustomException;
 
 public class UserPointUnitTest {
 
+	/**
+	 *  UserPoint 객체에서 포인트 충전과 사용에 대한 책임을 담당하였기에
+	 *  해당하는 기능의 테스트 코드를 작성하였습니다.
+	 *  최대금액에 대해 초과하면 예외처리를 하고 최소금액을 사용하지 않으면 예외가 발생하는 사용자 정책을 추가하였습니다.
+	 */
+
 	@ValueSource(longs = {-500L, -3700L})
 	@ParameterizedTest
 	void 포인트가_0미만의_유저는_예외를_발생시킨다(long amount) {

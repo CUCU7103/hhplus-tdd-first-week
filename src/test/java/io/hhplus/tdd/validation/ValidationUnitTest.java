@@ -15,6 +15,13 @@ public class ValidationUnitTest {
 	@Mock
 	private final ValidatorImpl validator = new ValidatorImpl();
 
+	/**
+	 *
+	 * 생성한 검증 로직이 실제로 검증이 되는지에 대해서 테스트 코드를 작성해야 된다고 판단하여
+	 * <p>해당 테스트 코드를 작성하였습니다.
+	 * <p>각각 id 값, amount 값의 유효성을 판단합니다.
+	 */
+
 	@ValueSource(longs = {0L, -100L})
 	@ParameterizedTest
 	void 입력받은_id_값이_0_이거나_음수라면_예외를_발생시킨다(long id) {

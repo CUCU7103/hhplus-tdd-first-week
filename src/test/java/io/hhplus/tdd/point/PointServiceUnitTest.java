@@ -30,6 +30,11 @@ class PointServiceUnitTest {
 	@InjectMocks
 	private PointService pointService;
 
+	/**
+	 *  포인트 조회에 관련한 기능은 단순한 DB 조회 로직이지만
+	 *  검증 객체를 사용하였으므로 이에 대한 성공 케이스 테스트 코드를 작성하였습니다.
+	 */
+
 	@Test
 	void 포인트_조회시_유저_아이디가_양수라면_정상적으로_조회된다() {
 		// arrange 테스트 조건
