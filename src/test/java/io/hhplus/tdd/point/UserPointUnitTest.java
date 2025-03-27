@@ -6,8 +6,8 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.ValueSource;
 
-import io.hhplus.tdd.CustomErrorCode;
-import io.hhplus.tdd.CustomException;
+import io.hhplus.tdd.error.CustomErrorCode;
+import io.hhplus.tdd.error.CustomException;
 
 public class UserPointUnitTest {
 
