@@ -5,6 +5,9 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
 
+import io.hhplus.tdd.error.CustomException;
+import io.hhplus.tdd.error.ErrorResponse;
+
 @RestControllerAdvice
 class ApiControllerAdvice extends ResponseEntityExceptionHandler {
 	@ExceptionHandler(value = Exception.class)

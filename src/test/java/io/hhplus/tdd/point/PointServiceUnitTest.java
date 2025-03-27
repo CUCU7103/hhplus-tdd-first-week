@@ -14,6 +14,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 
 import io.hhplus.tdd.database.PointHistoryTable;
 import io.hhplus.tdd.database.UserPointTable;
+import io.hhplus.tdd.validator.ValidatorImpl;
 
 @ExtendWith(MockitoExtension.class)
 class PointServiceUnitTest {
