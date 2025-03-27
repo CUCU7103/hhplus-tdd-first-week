@@ -53,11 +53,12 @@ public class PointService {
 			// 유저 정보를 가져오고 이를 검증하고 새로운 객체를 반환하는 역할을 밖으로 뺀다.
 			UserPoint afterChargedUserPoint = userPoint.charge(amount);
 			// 유저 포인트 저장하기
-			UserPoint resultUserPoint = userPointTable.insertOrUpdate(userPoint.id(), amount);
+			UserPoint resultUserPoint = userPointTable.insertOrUpdate(afterChargedUserPoint.id(),
+				afterChargedUserPoint.point());
 			// 히스토리에 저장하는 기능
 			pointHistoryTable.insert(resultUserPoint.id(), resultUserPoint.point(), TransactionType.CHARGE,
 				System.currentTimeMillis());
-			return afterChargedUserPoint;
+			return resultUserPoint;
 		} finally {
 			userLock.unlock();
 		}
@@ -78,7 +79,7 @@ public class PointService {
 				afterUsedUserPoint.point());
 			pointHistoryTable.insert(resultUserPoint.id(), resultUserPoint.point(), TransactionType.USE,
 				System.currentTimeMillis());
-			return afterUsedUserPoint;
+			return resultUserPoint;
 		} finally {
 			userLock.unlock();
 		}
