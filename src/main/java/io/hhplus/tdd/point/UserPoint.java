@@ -1,7 +1,7 @@
 package io.hhplus.tdd.point;
 
-import io.hhplus.tdd.CustomErrorCode;
-import io.hhplus.tdd.CustomException;
+import io.hhplus.tdd.error.CustomErrorCode;
+import io.hhplus.tdd.error.CustomException;
 
 public record UserPoint(long id, long point, long updateMillis) {
 

@@ -1,9 +1,9 @@
-package io.hhplus.tdd.point;
+package io.hhplus.tdd.validator;
 
 import org.springframework.stereotype.Component;
 
-import io.hhplus.tdd.CustomErrorCode;
-import io.hhplus.tdd.CustomException;
+import io.hhplus.tdd.error.CustomErrorCode;
+import io.hhplus.tdd.error.CustomException;
 
 @Component
 public class ValidatorImpl implements Validator {

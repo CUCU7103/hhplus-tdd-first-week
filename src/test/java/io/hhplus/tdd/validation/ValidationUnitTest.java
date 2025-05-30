@@ -6,9 +6,9 @@ import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.ValueSource;
 import org.mockito.Mock;
 
-import io.hhplus.tdd.CustomErrorCode;
-import io.hhplus.tdd.CustomException;
-import io.hhplus.tdd.point.ValidatorImpl;
+import io.hhplus.tdd.error.CustomErrorCode;
+import io.hhplus.tdd.error.CustomException;
+import io.hhplus.tdd.validator.ValidatorImpl;
 
 public class ValidationUnitTest {
 
